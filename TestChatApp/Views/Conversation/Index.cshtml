@@ -1,0 +1,62 @@
+﻿@model IEnumerable<TestChatApp.Models.User>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<head>
+    <link href="~/Content/Chat.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div class="jumbotron text-center my-0 p-3" id="jumbotronHead">
+    <h2>Welcome to your dialogue page @User.Identity.Name</h2>
+</div>
+<hr />
+    
+
+<div class="inbox_msg">
+    <div class="inbox_people">
+        <div class="inbox_chat">
+            @foreach (var user in Model)
+            {
+                if (user.Email != User.Identity.Name)
+                {
+                    <div class="chat_list">
+                        <div class="chat_people">
+                            <h5>@user.Email</h5>
+                            <p>Message text</p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    
+    <div class="msgs">
+        <div class="msg_history">
+            Message 1<br />
+            Message 2
+        </div>
+        <div class="type_msg">
+            <div class="input_msg_write">
+                <input type="text" placeholder="Type a message">
+                <button class="msg_send_btn" type="button"><i class="fa" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="~/Scripts/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".chat_list").click(function () {
+            $(this).siblings().removeClass("check");
+            $(this).siblings().css({ "background-color": "white", "color": "black" });
+            $(this).css({ "background-color": "gray", "color": "black" });
+            $(this).addClass("check");
+        })
+    })
+</script>

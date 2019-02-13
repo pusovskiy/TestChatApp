@@ -13,6 +13,9 @@ namespace TestChatApp.Models
 
         public DbSet<User> Users { get; set; }
         public DbSet<FriendConnection> FriendConnections { get; set; }
+        
+        public DbSet<Dialogue> Dialogues { get; set; }  
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
 

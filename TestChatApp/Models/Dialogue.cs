@@ -16,9 +16,7 @@ namespace TestChatApp.Models
         public string Text { get; set; }
 
         public DateTime DateOfStart { get; set; }
-
-        public UserConversation UserConversation { get; set; }
-
+        
         public virtual User FirstUser { get; set; }
 
         public virtual User SecondUser { get; set; }

@@ -9,5 +9,7 @@ namespace TestChatApp.Models
         public string Password { get; set; }
 
         public virtual ICollection<FriendConnection> Friends { get; set; }
+
+        public virtual ICollection<Dialogue> Dialogues { get; set; }
     }
 }

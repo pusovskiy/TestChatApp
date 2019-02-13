@@ -7,17 +7,21 @@
 
 <table class="table">
     
+    
+
     <tr>
         <th>Friend Name</th>
-        <th>Chat button</th>
     </tr>
     @foreach (var friend in Model)
     {
         <tr>
-        <td>@friend.Email</td>
-        <td>@Html.ActionLink("Create chat", "CreateChatGroup", "Chat",
-                new { chatFriendId = friend.Id }, new { @class = "btn btn-primary" })</td>
+            <td>@friend.Email</td>
         </tr>
     }
 
 </table>
+<br/>
+
+<div>
+    @Html.ActionLink("Go to the conversation room","Index","Conversation",null,new{@class="btn btn-primary"})
+</div>
