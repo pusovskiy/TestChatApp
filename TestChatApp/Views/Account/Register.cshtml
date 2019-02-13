@@ -1,0 +1,53 @@
+﻿@model TestChatApp.Models.RegisterModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+
+    <h2>Register</h2>
+    <hr/>
+    <div class="results" style="color:lightgoldenrodyellow">
+
+    </div>     
+    
+    <div id="post" style="color: brown">
+
+    </div>  
+
+<div class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-md-2">Email</label>
+            <div class="col-md-10">
+                <input class="form-control" type="email" name="Email" id="Email"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Password</label>
+            <div class="col-md-10">
+                <input class="form-control" type="password" name="Password" id="Password"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3">Confirm Password</label>
+            <div class="col-md-10">
+                <input class="form-control" type="password" name="Confirm Password" id="Confirm" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="submit_btn" value="Register" class="btn btn-primary" />
+            </div>
+        </div>
+        
+        
+    </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/registration.js")
+}
