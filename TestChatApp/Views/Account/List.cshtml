@@ -32,7 +32,7 @@
             <td>
                 @if (item.Email != User.Identity.Name)
                 {
-                    @Html.ActionLink("Add friend", "AddFriend", "Chat", new {id = item.Id}, new {@class = "btn btn-primary"})
+                    @Html.ActionLink("Add friend", "AddFriend", "Account", new {id = item.Id}, new {@class = "btn btn-primary"})
                 }
                 else
                 {

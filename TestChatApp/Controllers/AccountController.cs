@@ -102,6 +102,34 @@ namespace TestChatApp.Controllers
             
             return View(friends);
         }
+
+        [HttpGet]
+        public ActionResult AddFriend(int id)
+        {
+            FriendConnection connection = null;
+            using (UserContext db = new UserContext())
+            {
+                connection = db.FriendConnections.FirstOrDefault(f =>
+                    f.FirstUser.Email == User.Identity.Name && f.SecondUserId == id);
+
+                if (connection != null)
+                {
+                    ModelState.AddModelError("", "You are friends");
+                    ViewBag.Message = $"{User.Identity.Name} has user with this id in friend list";
+                }
+                else
+                {
+                    var user = db.Users.FirstOrDefault(u => u.Email == User.Identity.Name);
+                    user.Friends.Add(new FriendConnection { FirstUserId = user.Id, SecondUserId = id });
+                    db.SaveChanges();
+                    ViewBag.Message = $"{User.Identity.Name} added new friend!";
+
+                }
+
+            }
+            return View();
+        }
+
         public ActionResult Logoff()
         {
             FormsAuthentication.SignOut();

@@ -7,6 +7,12 @@
 
 <head>
     <link href="~/Content/Chat.css" rel="stylesheet" type="text/css">
+    <style>
+        .selected {
+            background-color: gray;
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,45 +24,116 @@
 
 <div class="inbox_msg">
     <div class="inbox_people">
-        <div class="inbox_chat">
-            @foreach (var user in Model)
+        <div class="inbox_chat" data-bind="foreach: dialogs">
+            @*@foreach (var user in Model)
             {
                 if (user.Email != User.Identity.Name)
                 {
                     <div class="chat_list">
-                        <div class="chat_people">
+                        <div class="chat_people" data-bind="click: goToChat">
+                            <div class="d-none" id="userId">@user.Id</div>
                             <h5>@user.Email</h5>
                             <p>Message text</p>
                         </div>
                     </div>
                 }
-            }
+            }*@
+            
+            <div class="chat_list">
+                <div class="chat_people" data-bind="click: $root.goToChat">
+                    <div class="d-none"></div>
+                    <h5 data-bind="text: email"></h5>
+                    <p data-bind="text: message"></p>
+                </div>
+            </div>
+
         </div>
     </div>
     
     <div class="msgs">
-        <div class="msg_history">
-            Message 1<br />
-            Message 2
-        </div>
-        <div class="type_msg">
-            <div class="input_msg_write">
-                <input type="text" placeholder="Type a message">
-                <button class="msg_send_btn" type="button"><i class="fa" aria-hidden="true"></i></button>
-            </div>
+        
+        <div class="partial" style="visibility: hidden">
+            @Html.Partial("_Chat")
         </div>
     </div>
-</div>
+    </div>
+
 </body>
 
 <script src="~/Scripts/jquery-3.3.1.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".chat_list").click(function () {
+        $(".chat_list").click(function() {
             $(this).siblings().removeClass("check");
             $(this).siblings().css({ "background-color": "white", "color": "black" });
             $(this).css({ "background-color": "gray", "color": "black" });
             $(this).addClass("check");
-        })
+            $(".partial").css({ "visibility": "visible" });
+            var userId = $(this).find('#userId').text();
+
+        });
     })
+</script>
+
+<script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script>
+    //$(function() {
+    //    var chat = $.connection.chatHub;
+
+    //    chat.client.addNewMessageToPage = function(name, message) {
+    //        $('discussion')
+    //            .append('<li><strong>' + htmlEncode(name) + '</strong>: ' + htmlEncode(message) + '</li>');
+    //    };
+    //    $('#message').focus();
+
+    //    $.connection.hub.start.done(function() {
+    //        $('#sendmessage').click(function() {
+    //            chat.server.send($('#displayname').val(), $('#message').val());
+    //            $('#message').val('').focus();
+    //        });
+    //    });
+    //});
+</script>
+
+<script src="~/Scripts/knockout-3.4.2.js" type="text/javascript"></script>
+<script type="text/javascript">
+    function ChatViewModel() {
+        var self = this;
+        self.chosenUser = ko.observable();
+        self.chosenUserChat = ko.observable();
+        self.chattedWithPerson = ko.observable('');
+        self.newMessage = ko.observable('');
+
+        self.dialogs = ko.observableArray();
+        self.messages = ko.observableArray();
+
+        self.initialize = function() {
+            self.dialogs([
+                { id: 1, email: "gg@ya.ry", message: "Hello 1" },
+                { id: 2, email: "den@ya.ry", message: "Hello 2" },
+                { id: 3, email: "gena@ya.ry", message: "Hello 3" }
+            ]);
+        }
+
+        self.goToChat = function (user) {
+            self.chattedWithPerson("@User.Identity.Name" + " chose chat with " + user.email);
+            var messages = [
+                { me: true, message: "Hello " + user.email },
+                { me: false, message: "Hello 2 " + user.email},
+                { me: true, message: "Hello 3 " + user.email },
+                { me: false, message: "Hello 4 " + user.email }
+            ];
+            self.messages(messages);
+             self.chosenUser(user);
+        };
+
+        self.sendMessage = function() {
+            self.messages.push({ me: true, message: self.newMessage() });
+            self.newMessage('');
+        }
+    }
+    chatViewModel = new ChatViewModel();
+    ko.applyBindings(chatViewModel);
+    chatViewModel.initialize();
 </script>

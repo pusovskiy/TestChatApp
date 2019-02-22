@@ -1,0 +1,41 @@
+﻿
+<link href="~/Content/Chat.css" type="text/css">
+
+<h2 data-bind="text: chattedWithPerson"></h2>
+<div class="type_msg">
+    <div class="input_msg_write">
+        <ul class="msg_history" id="discussion" data-bind="foreach:  messages">
+            <li>
+                <h5 data-bind="text: message, style: {textAlign: me ? 'right' : '' }"></h5>
+            </li>
+        </ul>
+
+        <input type="text" placeholder="Type a message" data-bind="value: newMessage">
+        <button class="msg_send_btn" type="button" data-bind="click: sendMessage"><i class="fa" aria-hidden="true"></i></button>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function() {
+            var chat = $.connection.chatHub;
+
+            chat.client.addNewMessageToPage = function(name, message) {
+                $('discussion')
+                    .append('<li><strong>' + htmlEncode(name) + '</strong>: ' + htmlEncode(message) + '</li>');
+            };
+            $('#displayname').val(@User.Identity.Name);
+            $('#message').focus();
+
+            $.connection.hub.start.done(function() {
+                $('#sendmessage').click(function() {
+                    chat.server.send($('#displayname').val(), $('#message').val());
+                    $('#message').val('').focus();
+                });
+            });
+        });
+    </script>
+}
