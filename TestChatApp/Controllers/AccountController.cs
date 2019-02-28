@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using TestChatApp.Models;
+using TestChatApp.ViewModels;
 
 namespace TestChatApp.Controllers
 {
@@ -16,8 +17,16 @@ namespace TestChatApp.Controllers
 
             using (UserContext db = new UserContext())
             {
+                var users = db.Users.ToList();
 
-                return View(db.Users.ToList());
+                var usersViewModels = new List<UserViewModel>();
+
+                foreach (var user in users)
+                {
+                  usersViewModels.Add(new UserViewModel { Id = user.Id, Email = user.Email });
+                }
+
+                return View(usersViewModels);
             }
         }
         public ActionResult Login()

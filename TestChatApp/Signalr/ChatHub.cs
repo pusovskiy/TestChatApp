@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using TestChatApp.Models;
 using TestChatApp.Signalr;
 
 namespace TestChatApp
@@ -23,6 +25,7 @@ namespace TestChatApp
                 Clients.Client(connectionId).addChatMessage(name,message);
             }
 
+            TestChatApp.Controllers.ConversationController.AddToDatabase(name, who, message);
 
         }
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestChatApp.Models.User>
+﻿@model List<TestChatApp.ViewModels.UserViewModel>
 
 @{
     ViewBag.Title = "List";
@@ -11,40 +11,41 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Id)
+           Id
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+           Email
         </th>
         <th>Add friend</th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        @if (User.Identity.IsAuthenticated)
-        {
+    @foreach (var item in Model)
+    {
+        <tr>
             <td>
-                @if (item.Email != User.Identity.Name)
-                {
-                    @Html.ActionLink("Add friend", "AddFriend", "Account", new {id = item.Id}, new {@class = "btn btn-primary"})
-                }
-                else
-                {
-                    @Html.ActionLink("To your Profile","UserProfile","Account",new{@class="btn btn-default"})
-                }
+                @Html.DisplayFor(modelItem => item.Id)
             </td>
-        }
-        else
-        {
-            <td></td>
-        }
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    @if (item.Email != User.Identity.Name)
+                    {
+                        @Html.ActionLink("Add friend", "AddFriend", "Account", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("To your Profile", "UserProfile", "Account", new { @class = "btn btn-default" })
+                    }
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+        </tr>
+    }
 
 </table>
