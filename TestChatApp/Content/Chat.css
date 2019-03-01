@@ -37,10 +37,15 @@
     float: left;
     padding: 30px 15px 0 25px;
     width: 60%;
+    height: 605px;
+}
+
+.msgs_title {
+    text-align: center;
 }
 
 .msg_history {
-    height: 516px;
+    height: 434px;
     overflow-y: auto;
 }
 
@@ -49,35 +54,4 @@
     position: relative;
 }
 
-.input_msg_write input {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border: medium none;
-    color: #4c4c4c;
-    font-size: 15px;
-    min-height: 48px;
-    min-width: 483px;
-    width: 100%;
-}
-
-
-.msg_send_btn {
-    background: #05728f none repeat scroll 0 0;
-    border: medium none;
-    border-radius: 50%;
-    color: #fff;
-    cursor: pointer;
-    font-size: 17px;
-    height: 33px;
-    right: 0;
-    top: 11px;
-    width: 33px;
-}
-
-.fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-}
 

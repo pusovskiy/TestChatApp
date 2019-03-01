@@ -15,14 +15,6 @@ namespace TestChatApp.Controllers
             return View();
         }
 
-        public ActionResult GetMessages()
-        {
-            using (UserContext db = new UserContext())
-            {
-                List<Message> messages = db.Messages.ToList<Message>();
-
-                return Json(new {data = messages}, JsonRequestBehavior.AllowGet);
-            }
-        }
+        
     }
 }

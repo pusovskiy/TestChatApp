@@ -12,7 +12,7 @@ namespace TestChatApp.Controllers
     public class AccountController : Controller
     {
         
-        public ActionResult List(string nameUser, int page = 1)
+        public ActionResult List()
         {
 
             using (UserContext db = new UserContext())

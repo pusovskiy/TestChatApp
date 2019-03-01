@@ -22,7 +22,7 @@ namespace TestChatApp
 
             foreach (var connectionId in _connections.GetConnections(who))
             {
-                Clients.Client(connectionId).addChatMessage(name,message);
+                Clients.Client(connectionId).messageRecieved(message);
             }
 
             TestChatApp.Controllers.ConversationController.AddToDatabase(name, who, message);

@@ -11,7 +11,7 @@
     <style>
         .selected {
             color: black;
-            background-color: white;
+            background-color: #28a745;
         }
     </style>
 </head>
@@ -22,12 +22,12 @@
 </div>
 <hr />
     
-
 <div class="inbox_msg">
     <div class="inbox_people">
         <div class="inbox_chat" data-bind="foreach: jsonUsers">
-            <div class="chat_list" data-bind="css: { selected: $parent.chosenUser() && Email === $parent.chosenUser().Email }">
-                <div class="chat_people" data-bind="css:{selected: Email==$root.chosenUser.Email},click: $root.goToChat">
+            <div class="chat_list" data-bind="click: $root.goToChat, css: { selected: $parent.chosenUser() && Email === $parent.chosenUser().Email }">
+                <div class="chat_people">
+                    <div class="d-none" data-bind="text: Id"></div>
                     <h5 id="userName" data-bind="text: Email"></h5>
                 </div>
             </div>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="msgs">
-
+        <div id="test"></div>
         <div class="partial" data-bind="visible: chosenUser()">
             @Html.Partial("_Chat")
         </div>
@@ -46,61 +46,75 @@
 
 
 @section scripts{
-    
     <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script>
-        $(function () {
-            var userName=null;
-            $('.chat_list').click(function() {
-                $('#discussion').html('');
-                userName = $(this).find('#userName').text();
-            });
+        window.userName = null;
+        $(function() {
 
-            var chat = $.connection.chatHub;
-
-            chat.client.addChatMessage = function(name, message) {
-                $('#discussion')
-                    .append('<li><strong>' + htmlEncode(name) + '</strong>: ' + htmlEncode(message) + '</li>');
-            };
-
-            $('#displayname').val('@User.Identity.Name');
-            $('#message').focus();
-
-            $.connection.hub.start().done(function() {
-                $('.msg_send_btn').click(function() {
-                    chat.server.sendChatMessage(userName , $('#message').val());
-                    chat.server.sendChatMessage('@User.Identity.Name', $('#message').val());
-
-
-                    $('#message').val('').focus();
-                });
-            });
         });
-
-        function htmlEncode(value) {
-            var encodedValue = $('<div />').text(value).html();
-            return encodedValue;
-        }
     </script>
 
     <script src="~/Scripts/knockout-3.4.2.js" type="text/javascript"></script>
     <script type="text/javascript">
-        function ChatViewModel() {
-            var self = this;
-            self.chosenUser = ko.observable();
-            self.chattedWithPerson = ko.observable('');
-            self.jsonUsers = ko.observableArray(@Html.Raw(JsonConvert.SerializeObject(Model)));
-            self.messages = ko.observableArray([]);
-            
-            self.goToChat = function(user) {
-                self.chattedWithPerson("@User.Identity.Name" + " chose chat with "+ user.Email);
-                self.chosenUser(user);
-            };
+        $(function() {
+            function ChatViewModel() {
+                var self = this;
+                self.chat = {};
+                self.chosenUser = ko.observable();
+                self.message = ko.observable('');
+                self.chattedWithPerson = ko.observable('');
+                self.jsonUsers = ko.observableArray(@Html.Raw(JsonConvert.SerializeObject(Model)));
+                self.messages = ko.observableArray([]);
 
-        }
+                self.sendMessage = function() {
+                    var newMessage = { ChatMessage: self.message(), DateTime: new Date() };
+                    self.messages.push(newMessage);
+                    self.chat.server.sendChatMessage(window.userName, newMessage);
+                    self.message('');
+                    $('#message').focus();
+                }
 
-        chatViewModel = new ChatViewModel();
-        ko.applyBindings(chatViewModel);
+                self.initialize = function () {
+                    self.startHub();
+                    $('#message').focus();
+                }
+
+                self.goToChat = function(user) {
+                    self.chattedWithPerson("@User.Identity.Name" + " chose chat with " + user.Email);
+                    self.chosenUser(user);
+
+                    self.messages.removeAll();
+
+                    $.ajax({
+                        url: "/Conversation/GetMessages?id=" + user.Id,
+                        type: "GET",
+                        success: function(data) {
+                            ko.utils.arrayPushAll(self.messages, data);
+                        },
+                        error: function(xhr, status) {
+                            alert(xhr);
+                            alert(status);
+                        }
+                    });
+
+                    window.userName = $(this).find('#userName').text();
+                };
+
+                self.startHub = function() {
+                    self.chat = $.connection.chatHub;
+                    self.chat.client.messageRecieved = function(message) {
+                        self.messages.push(message);
+                    };
+                    $.connection.hub.start().done(function() {
+                    });
+                };
+
+            }
+
+            chatViewModel = new ChatViewModel();
+            ko.applyBindings(chatViewModel);
+            chatViewModel.initialize();
+        });
     </script>
 }
