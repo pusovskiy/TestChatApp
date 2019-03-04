@@ -48,13 +48,6 @@
 @section scripts{
     <script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script>
-        window.userName = null;
-        $(function() {
-
-        });
-    </script>
-
     <script src="~/Scripts/knockout-3.4.2.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(function() {
@@ -70,14 +63,13 @@
                 self.sendMessage = function() {
                     var newMessage = { ChatMessage: self.message(), DateTime: new Date() };
                     self.messages.push(newMessage);
-                    self.chat.server.sendChatMessage(window.userName, newMessage);
+                    self.chat.server.send(self.chosenUser().Email, newMessage.ChatMessage);
+
                     self.message('');
-                    $('#message').focus();
                 }
 
                 self.initialize = function () {
                     self.startHub();
-                    $('#message').focus();
                 }
 
                 self.goToChat = function(user) {
@@ -92,13 +84,11 @@
                         success: function(data) {
                             ko.utils.arrayPushAll(self.messages, data);
                         },
-                        error: function(xhr, status) {
-                            alert(xhr);
+                        error: function(status) {
                             alert(status);
                         }
                     });
 
-                    window.userName = $(this).find('#userName').text();
                 };
 
                 self.startHub = function() {

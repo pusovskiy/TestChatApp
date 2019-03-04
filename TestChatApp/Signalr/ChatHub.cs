@@ -15,7 +15,7 @@ namespace TestChatApp
         private static readonly ConnectionMapping<string> _connections = 
             new ConnectionMapping<string>();
 
-        public void SendChatMessage(string who,string message)
+        public void Send(string who,string message)
         {
             string name = Context.User.Identity.Name;
 
@@ -25,7 +25,7 @@ namespace TestChatApp
                 Clients.Client(connectionId).messageRecieved(message);
             }
 
-            TestChatApp.Controllers.ConversationController.AddToDatabase(name, who, message);
+            //Controllers.ConversationController.AddToDatabase(name, who, message);
 
         }
 

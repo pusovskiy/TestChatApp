@@ -1,7 +1,9 @@
-﻿using Owin;
-using Microsoft.Owin;
-[assembly: OwinStartup(typeof(TestChatApp.Startup))]
-namespace TestChatApp
+﻿using Microsoft.Owin;
+using Owin;
+using TestChatApp.Views;
+
+[assembly: OwinStartup(typeof(Startup))]
+namespace TestChatApp.Views
 {
     public class Startup
     {
