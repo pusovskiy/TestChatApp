@@ -31,14 +31,6 @@ namespace TestChatApp.Controllers
                         usersViewModels.Add(new UserViewModel {Id = user.Id, Email = user.Email});
                     }
                 }
-
-                //var usersViewModels = users.Select(x => 
-                //        new UserViewModel
-                //        {
-                //            Email = x.Email
-                //        }).Where()
-                //    .ToList();
-
                 return View(usersViewModels);
             }
 

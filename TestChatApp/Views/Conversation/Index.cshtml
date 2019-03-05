@@ -61,7 +61,7 @@
                 self.messages = ko.observableArray([]);
 
                 self.sendMessage = function() {
-                    var newMessage = { ChatMessage: self.message(), DateTime: new Date() };
+                    var newMessage = { ChatMessage: self.message(), DateTime: Date() };
                     self.messages.push(newMessage);
                     self.chat.server.send(self.chosenUser().Email, newMessage.ChatMessage);
 
@@ -93,8 +93,9 @@
 
                 self.startHub = function() {
                     self.chat = $.connection.chatHub;
-                    self.chat.client.messageRecieved = function(message) {
-                        self.messages.push(message);
+                    self.chat.client.messageRecieved = function (message) {
+                        var incomingMessage = { ChatMessage: message, DateTime: new Date() };
+                        self.messages.push(incomingMessage);
                     };
                     $.connection.hub.start().done(function() {
                     });

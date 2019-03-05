@@ -105,8 +105,11 @@ namespace TestChatApp.Controllers
             var friends = new List<User>();
             using (UserContext db = new UserContext())
             {
-                var user = db.Users.FirstOrDefault(m => m.Email == User.Identity.Name);
-                friends = user.Friends.Select(x => x.SecondUser).ToList();
+                if (User.Identity.IsAuthenticated)
+                {
+                    var user = db.Users.FirstOrDefault(m => m.Email == User.Identity.Name);
+                    friends = user.Friends.Select(x => x.SecondUser).ToList();
+                }
             }
             
             return View(friends);

@@ -25,7 +25,7 @@ namespace TestChatApp
                 Clients.Client(connectionId).messageRecieved(message);
             }
 
-            //Controllers.ConversationController.AddToDatabase(name, who, message);
+            Controllers.ConversationController.AddToDatabase(name, who, message);
 
         }
 
